@@ -1,0 +1,30 @@
+﻿@model List<ProductosDAO.Models.ProductoSet>
+
+<h1>Listado de productos</h1>
+
+@foreach (var p in Model)
+{
+    <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+        <h3>@p.nombre</h3>
+
+        <p>
+            @(p.breveDescripcion.Length > 100
+                    ? p.breveDescripcion.Substring(0, 100) + "..."
+                    : p.breveDescripcion)
+        </p>
+
+        <p>Precio: @p.precio €</p>
+
+        <p>
+            Stock:
+            <span style="color:@(p.stock == 0 ? "red" : p.stock < 5 ? "orange" : "green")">
+                @p.stock
+            </span>
+        </p>
+
+        @if (p.oferta == 1)
+        {
+            <strong style="color:blue;">OFERTA</strong>
+        }
+    </div>
+}

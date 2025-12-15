@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="ProductosAPI/ProductosAPI.csproj" />
+  <Project Path="ProductosDAO/ProductosDAO.csproj" />
+  <Project Path="ProductosWeb/ProductosWeb.csproj" Id="49891d5e-397d-4612-b90d-e2e5d70d1e0d" />
+</Solution>
