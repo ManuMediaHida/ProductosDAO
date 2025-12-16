@@ -1,30 +1,41 @@
 ﻿@model List<ProductosDAO.Models.ProductoSet>
 
-<h1>Listado de productos</h1>
+<div class="container mt-4">
+    <h1 class="mb-4">Listado de productos</h1>
 
-@foreach (var p in Model)
-{
-    <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
-        <h3>@p.nombre</h3>
-
-        <p>
-            @(p.breveDescripcion.Length > 100
-                    ? p.breveDescripcion.Substring(0, 100) + "..."
-                    : p.breveDescripcion)
-        </p>
-
-        <p>Precio: @p.precio €</p>
-
-        <p>
-            Stock:
-            <span style="color:@(p.stock == 0 ? "red" : p.stock < 5 ? "orange" : "green")">
-                @p.stock
-            </span>
-        </p>
-
-        @if (p.oferta == 1)
+    <div class="row">
+        @foreach (var p in Model)
         {
-            <strong style="color:blue;">OFERTA</strong>
+            <div class="col-12 col-md-6 col-lg-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <img src="~/images/8de27aaa2083e934b446a9f0315ee3c6-1-2-1499-1.jpg" class="card-img-top" alt="@p.nombre" style="object-fit: cover; height: 180px;" />
+
+                        <h5 class="card-title">@p.nombre</h5>
+
+                        <p class="card-text">
+                            @(p.breveDescripcion.Length > 100
+                                                    ? p.breveDescripcion.Substring(0, 100) + "..."
+                                                    : p.breveDescripcion)
+                        </p>
+
+                        <p class="mb-1">Precio: @p.precio €</p>
+
+                        <p class="mb-2">
+                            Stock:
+                            <span style="color:@(p.stock == 0 ? "red" : p.stock < 5 ? "orange" : "green")">
+                                @p.stock
+                            </span>
+                        </p>
+
+                        @if (p.oferta == 1)
+                        {
+                            <span class="badge bg-primary">OFERTA</span>
+                        }
+
+                    </div>
+                </div>
+            </div>
         }
     </div>
-}
+</div>
