@@ -37,7 +37,10 @@ namespace ProductosDAO.Services
         /// <returns>Producto si existe; null si no existe.</returns>
         public ProductoSet? GetById(int idProducto)
         {
-            return _context.ProductoSet.Find(idProducto);
+            // mmediavilla_20251215 ProductosApi 1.0: AsNoTracking() = solo lectura, EF no trackea ni guarda el estado del objeto en memoria.
+            return _context.ProductoSet
+                .AsNoTracking()
+                .FirstOrDefault(p => p.idProducto == idProducto);
 
         }//Fin método GetById(int idProducto)
 
@@ -51,8 +54,10 @@ namespace ProductosDAO.Services
         /// <returns>Lista de productos.</returns>
         public IList<ProductoSet> GetAll()
         {
+            // mmediavilla_20251215 ProductosApi 1.0: OrderBy da un orden consistente y AsNoTracking mejora rendimiento al ser lectura pura.
             return _context.ProductoSet
-                .AsNoTracking()  
+                .AsNoTracking()
+                .OrderBy(p => p.idProducto)
                 .ToList();
 
         }//Fin método GetAll()
@@ -68,6 +73,7 @@ namespace ProductosDAO.Services
         /// <returns>Producto insertado (con ID asignado si aplica).</returns>
         public ProductoSet Add(ProductoSet producto)
         {
+            // mmediavilla_20251215 ProductosApi 1.0: Add marca la entidad como nueva y SaveChanges ejecuta el INSERT realmente en la base de datos.
             _context.ProductoSet.Add(producto);
             _context.SaveChanges();
             return producto;
@@ -86,6 +92,7 @@ namespace ProductosDAO.Services
         /// <returns>Producto actualizado si existe; null si no existe.</returns>
         public ProductoSet? Update(int idProducto, ProductoSet producto)
         {
+            // mmediavilla_20251215 ProductosApi 1.0: Aquí NO usamos AsNoTracking porque EF necesita tracking para detectar cambios y generar el UPDATE.
             var existente = _context.ProductoSet.Find(idProducto);
             if (existente == null) return null;
 
@@ -96,6 +103,7 @@ namespace ProductosDAO.Services
             existente.stock = producto.stock;
             existente.oferta = producto.oferta;
 
+            // mmediavilla_20251215 ProductosApi 1.0: SaveChanges persiste los cambios trackeados en la BBDD (UPDATE).
             _context.SaveChanges();
             return existente;
 
@@ -117,9 +125,15 @@ namespace ProductosDAO.Services
         {
             try
             {
+                // mmediavilla_20251215 ProductosApi 1.0: Remove marca la entidad como Deleted y SaveChanges ejecuta el DELETE realmente en la base de datos.
                 _context.ProductoSet.Remove(producto);
                 _context.SaveChanges();
                 return string.Empty;
+            }
+            catch (DbUpdateException ex)
+            {
+                // mmediavilla_20251215 ProductosApi 1.0: DbUpdateException suele ser un error de BBDD (FK, restricciones, etc.).
+                return ex.InnerException?.Message ?? ex.Message;
             }
             catch (Exception ex)
             {
