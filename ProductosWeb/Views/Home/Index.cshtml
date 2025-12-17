@@ -5,7 +5,7 @@
          no a nivel de recomprimir en servidor.
    ================================================================================================ *@
 
-@model List<ProductosDAO.Models.ProductoSet>
+@model List<ProductosDAO.Models.ProductoModel>
 
 @functions {
     // mmediavilla_20251215 ProductosApi 1.0: Devuelve una URL “optimizada” (solo añade parámetros si los quisieras para un CDN; en wwwroot normalmente se ignoran).
@@ -14,13 +14,12 @@
         // mmediavilla_20251215 ProductosApi 1.0: Convierte "~/" a una URL válida (ej: "/images/xxx.jpg").
         var url = Url.Content(virtualPath);
 
-        // mmediavilla_20251215 ProductosApi 1.0: Si algún día usas un CDN que soporte query params, esto ya lo tendrías.
         var separator = url.Contains('?') ? "&" : "?";
         return $"{url}{separator}width={width}&height={height}&quality={quality}&format={format}";
     }
 
     // mmediavilla_20251215 ProductosApi 1.0: Ruta única de imagen usada en la prueba (si luego cada producto tiene su imagen, aquí lo cambias).
-    string GetProductImagePath(ProductosDAO.Models.ProductoSet p)
+    string GetProductImagePath(ProductosDAO.Models.ProductoModel p)
         => "~/images/8de27aaa2083e934b446a9f0315ee3c6-1-2-1499-1.jpg";
 }
 

@@ -38,8 +38,8 @@ namespace ProductosWeb.Controllers
         /// <returns>Vista Index con la lista de productos.</returns>
         public async Task<IActionResult> Index()
         {
-            var productos = await _httpClient.GetFromJsonAsync<List<ProductoSet>>("Producto");
-            return View(productos ?? new List<ProductoSet>());
+            var productos = await _httpClient.GetFromJsonAsync<List<ProductoModel>>("Producto");
+            return View(productos ?? new List<ProductoModel>());
 
         }//Fin método Index()
 
