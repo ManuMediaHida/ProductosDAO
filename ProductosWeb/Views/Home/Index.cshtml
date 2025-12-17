@@ -1,4 +1,28 @@
-﻿@model List<ProductosDAO.Models.ProductoSet>
+﻿@* ================================================================================================
+   mmediavilla_20251215 ProductosApi 1.0: Index.cshtml (ProductosWeb)
+   Descripción: Vista Razor que pinta el listado de productos.
+   Nota: Si las imágenes están en wwwroot, esta “optimización” es a nivel de carga (lazy/async/size),
+         no a nivel de recomprimir en servidor.
+   ================================================================================================ *@
+
+@model List<ProductosDAO.Models.ProductoSet>
+
+@functions {
+    // mmediavilla_20251215 ProductosApi 1.0: Devuelve una URL “optimizada” (solo añade parámetros si los quisieras para un CDN; en wwwroot normalmente se ignoran).
+    string GetOptimizedImageUrl(string virtualPath, int width = 400, int height = 180, int quality = 80, string format = "webp")
+    {
+        // mmediavilla_20251215 ProductosApi 1.0: Convierte "~/" a una URL válida (ej: "/images/xxx.jpg").
+        var url = Url.Content(virtualPath);
+
+        // mmediavilla_20251215 ProductosApi 1.0: Si algún día usas un CDN que soporte query params, esto ya lo tendrías.
+        var separator = url.Contains('?') ? "&" : "?";
+        return $"{url}{separator}width={width}&height={height}&quality={quality}&format={format}";
+    }
+
+    // mmediavilla_20251215 ProductosApi 1.0: Ruta única de imagen usada en la prueba (si luego cada producto tiene su imagen, aquí lo cambias).
+    string GetProductImagePath(ProductosDAO.Models.ProductoSet p)
+        => "~/images/8de27aaa2083e934b446a9f0315ee3c6-1-2-1499-1.jpg";
+}
 
 <div class="container mt-4">
     <h1 class="mb-4">Listado de productos</h1>
@@ -8,9 +32,18 @@
         {
             <div class="col-12 col-md-6 col-lg-4 mb-4">
                 <div class="card h-100">
-                    <div class="card-body">
-                        <img src="~/images/8de27aaa2083e934b446a9f0315ee3c6-1-2-1499-1.jpg" class="card-img-top" alt="@p.nombre" style="object-fit: cover; height: 180px;" />
 
+                    @* mmediavilla_20251215 ProductosApi 1.0: Imagen con carga optimizada (lazy + async + tamaño fijo para evitar CLS) *@
+                    <img src="@GetOptimizedImageUrl(GetProductImagePath(p), width: 400, height: 180, quality: 80, format: "webp")"
+                         class="card-img-top"
+                         alt="@p.nombre"
+                         loading="lazy"
+                         decoding="async"
+                         width="400"
+                         height="180"
+                         style="object-fit: cover; height: 180px;" />
+
+                    <div class="card-body">
                         <h5 class="card-title">@p.nombre</h5>
 
                         <p class="card-text">
@@ -32,7 +65,6 @@
                         {
                             <span class="badge bg-primary">OFERTA</span>
                         }
-
                     </div>
                 </div>
             </div>
